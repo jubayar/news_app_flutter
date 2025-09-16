@@ -3,6 +3,8 @@ import 'package:news_app/features/daily_news/presentation/bloc/remote_article_bl
 import 'package:news_app/features/daily_news/presentation/bloc/remote_article_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/article_tile.dart';
+
 class DailyNews extends StatelessWidget {
   const DailyNews({ Key ? key }) : super(key: key);
 

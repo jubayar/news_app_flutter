@@ -14,5 +14,4 @@ abstract class NewsApiService {
     @Query("country") String ? country,
     @Query("category") String ? category,
   });
-
 }
