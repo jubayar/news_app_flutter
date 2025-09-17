@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/features/daily_news/domain/entities/article.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ArticleWidget extends StatelessWidget {
   final ArticleEntity? article;
@@ -17,13 +17,11 @@ class ArticleWidget extends StatelessWidget {
         bottom: 16,
       ),
       height: MediaQuery.of(context).size.width / 2.2,
-      child: Row(children: [
-        Text('${article!.title}'),
-      ]),
+      child: Row(children: [_buildImage(context), _buildTitleAndDescription()]),
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: article!.urlToImage ?? "",
       imageBuilder: (context, imageProvider) => Padding(
@@ -34,14 +32,38 @@ class ArticleWidget extends StatelessWidget {
             width: MediaQuery.of(context).size.width / 3,
             height: double.maxFinite,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
             ),
           ),
         ),
       ),
-      progressIndicatorBuilder: (context, url, downloadProgress) =>
-          CircularProgressIndicator(value: downloadProgress.progress),
+      progressIndicatorBuilder: (context, url, downloadProgress) => Padding(
+        padding: const EdgeInsetsDirectional.only(end: 16),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 3,
+          height: double.maxFinite,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha:0.08),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Center(
+            child: CircularProgressIndicator(value: downloadProgress.progress),
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) => Padding(
+        padding: const EdgeInsetsDirectional.only(end: 16),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 3,
+          height: double.maxFinite,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha:0.08),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: const Icon(Icons.error),
+        ),
+      ),
     );
   }
 
@@ -57,24 +79,31 @@ class ArticleWidget extends StatelessWidget {
               article!.title ?? "",
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 18, color: Colors.black87),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
             ),
 
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text(article!.description ?? "", maxLines: 2),
+                child: Text(
+                  article!.description ?? "",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                ),
               ),
             ),
 
             Row(
               children: [
                 const Icon(Icons.timeline_outlined, size: 16),
-
                 const SizedBox(width: 4),
-
                 Text(
-                  article!.publishedAt!,
+                  article!.publishedAt ?? "",
                   style: const TextStyle(fontSize: 12),
                 ),
               ],
